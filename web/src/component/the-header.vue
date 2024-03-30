@@ -9,7 +9,7 @@
         <span style="white-space: nowrap;text-overflow: ellipsis">你好! {{member.mobile}}</span>
       </div>
       <div style="flex: 2">
-        <router-link to="/login">退出系统</router-link>
+        <router-link to="/login" @click="logout">退出系统</router-link>
       </div>
 
     </div>
@@ -17,11 +17,15 @@
 </template>
 
 <script setup>
-// import {ref} from "vue";
 import store from "@/store";
-// const selectedKeys1 = ref(['1'])
-let member = store.state.a.member
-console.log(member.mobile)
+import {message} from "ant-design-vue";
+
+const logout=()=>{
+  store.commit("setMember",{})
+  message.success("退出成功")
+}
+
+const member=JSON.parse(localStorage.getItem("member"))
 </script>
 
 <style scoped>

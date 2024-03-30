@@ -1,4 +1,6 @@
 import axios from 'axios'
+import store from "@/store";
+import {notification} from "ant-design-vue";
 import router from "@/router";
 
 // 创建可一个新的axios对象
@@ -11,10 +13,9 @@ const request = axios.create({
 // 可以自请求发送前对请求做一些处理
 // 比如统一加token，对请求参数统一加密
 request.interceptors.request.use(config => {
-    config.headers['Content-Type'] = 'application/json;charset=utf-8';        // 设置请求头格式
-    // let user = JSON.parse(localStorage.getItem("xm-user") || '{}')  // 获取缓存的用户信息
-    // config.headers['token'] = user.token  // 设置请求头
-    //
+    config.headers['Content-Type'] = 'application/json;charset=utf-8';
+    let token = JSON.parse(localStorage.getItem('member'));
+    config.headers.token = token.token;
     return config
 }, error => {
     console.error('request error: ' + error) // for debug
@@ -31,16 +32,21 @@ request.interceptors.response.use(
         if (typeof res === 'string') {
             res = res ? JSON.parse(res) : res
         }
-        if (res.code === '401') {
-            router.push('/login')
-        }
         return res;
     },
     error => {
-        console.error('response error: ' + error) // for debug
+        const response = error.response;
+        const data = response.status;
+        if (data === 401) {
+            store.commit("setMember", {});
+            notification.error({
+                message: '错误',
+                description: '登录已过期，请重新登录',
+            })
+            router.push('/login')
+        }
         return Promise.reject(error)
     }
 )
-
 
 export default request

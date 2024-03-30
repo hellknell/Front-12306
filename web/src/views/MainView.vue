@@ -2,7 +2,7 @@
   <a-layout style="min-height: 100vh">
     <TheHeader></TheHeader>
     <a-layout style="margin-top:10px">
-      <a-layout-sider width="200"  style="background: #fff;max-height:calc(90vh - 10px)">
+      <a-layout-sider width="200" style="background: #fff;max-height:calc(90vh - 10px)">
         <TheSider/>
       </a-layout-sider>
       <a-layout style="padding: 0 18px 18px;">
@@ -14,7 +14,7 @@
         <a-layout-content
             :style="{ background: '#fff', padding: '10px', margin: 0, minHeight: '300px' }"
         >
-          <router-view/>
+          会员人数:{{ count }}
         </a-layout-content>
       </a-layout>
     </a-layout>
@@ -23,8 +23,20 @@
 <script setup>
 import TheHeader from '@/component/the-header.vue'
 import TheSider from '@/component/the-sider.vue'
-import {reactive, watch} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
+import request from "@/util/request";
+import {message} from "ant-design-vue";
+const count = ref('')
+onMounted(() => {
+  request.get("/count").then(res => {
+    if(res.code === '200'){
+      count.value = res?.data
+    }else {
+      message.error("请求数据失败")
+    }
+  })
 
+})
 // const items = reactiv[
 //     {
 //       key: '1',
