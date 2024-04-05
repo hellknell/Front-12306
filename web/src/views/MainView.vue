@@ -2,19 +2,35 @@
   <a-layout style="min-height: 100vh">
     <TheHeader></TheHeader>
     <a-layout style="margin-top:10px">
-      <a-layout-sider width="200" style="background: #fff;max-height:calc(90vh - 10px)">
+      <a-layout-sider v-model:collapsed="collapsed" collapsible
+                      style="background: #fff;height: calc(90vh - 10px);overflow: scroll">
         <TheSider/>
       </a-layout-sider>
       <a-layout style="padding: 0 18px 18px;">
-        <a-breadcrumb style="margin: 0 auto">
-          <a-breadcrumb-item>Home</a-breadcrumb-item>
-          <a-breadcrumb-item>List</a-breadcrumb-item>
-          <a-breadcrumb-item>App</a-breadcrumb-item>
-        </a-breadcrumb>
+        <div style="width: min-content;height:min-content">
+          <a-button type="primary" @click="() => (collapsed = !collapsed)">
+            <MenuUnfoldOutlined
+                v-if="collapsed"
+                class="trigger"
+            />
+            <MenuFoldOutlined v-else class="trigger"/>
+          </a-button>
+        </div>
+
+        <div style="text-align: left">
+
+        </div>
+
+        <!--        <a-breadcrumb style="margin: 0 auto">-->
+        <!--          <a-breadcrumb-item>Home</a-breadcrumb-item>-->
+        <!--          <a-breadcrumb-item>List</a-breadcrumb-item>-->
+        <!--          <a-breadcrumb-item>App</a-breadcrumb-item>-->
+        <!--        </a-breadcrumb>-->
         <a-layout-content
             :style="{ background: '#fff', padding: '10px', margin: 0, minHeight: '300px' }"
         >
           会员人数:{{ count }}
+          <router-view/>
         </a-layout-content>
       </a-layout>
     </a-layout>
@@ -26,12 +42,15 @@ import TheSider from '@/component/the-sider.vue'
 import {onMounted, reactive, ref, watch} from "vue";
 import request from "@/util/request";
 import {message} from "ant-design-vue";
+import {MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons-vue";
+
 const count = ref('')
+const collapsed = ref(false)
 onMounted(() => {
   request.get("/count").then(res => {
-    if(res.code === '200'){
+    if (res.code === '200') {
       count.value = res?.data
-    }else {
+    } else {
       message.error("请求数据失败")
     }
   })
@@ -148,9 +167,26 @@ watch(
   background: rgba(255, 255, 255, 0.3);
 }
 
+.ant-layout-sider-children {
+  display: flex;
+  justify-content: center;
+}
+
+.ant-layout-sider-collapsed {
+  max-width: 24px !important;
+}
+
+.ant-menu-inline-collapsed {
+  max-width: 24px !important;
+}
+
 .ant-row-rtl #components-layout-demo-top-side-2 .logo {
   float: right;
   margin: 16px 0 16px 24px;
+}
+
+.folded {
+
 }
 
 .site-layout-background {

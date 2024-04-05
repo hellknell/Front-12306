@@ -10,10 +10,22 @@ const routes = [
         component: () => import('../views/LoginView.vue')
     },
     {
-        path: '/index',
+        path: '/',
         name: 'Index',
+        redirect: '/welcome',
         meta: {requiresAuth: true}, // 添加该字段，表示需要认证
         component: () => import('../views/MainView.vue'),
+        children: [
+            {
+                path: 'welcome',
+                name: 'Welcome',
+                component: () => import('../views/main/WelComeView.vue')
+            },
+            {
+                path: 'passenger',
+                name: 'Passenger',
+                component: () => import('../views/main/PassengerView.vue')
+            }]
     }]
 const router = createRouter({
     history: createWebHistory(),
@@ -21,12 +33,12 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
     if (to.matched.some((item) => {
-        return item.meta.requiresAuth;
+        return item.meta?.requiresAuth;
     })) {
-        let token = store.state.member?.token;
-        console.log("校验开始")
+        console.log(store.state.member)
+        let token = JSON.parse(localStorage.getItem("member")).token
         if (!token) {
-            notification.error({description:"未登录或token已过期，请重新登录"})
+            notification.error({description: "未登录或token已过期，请重新登录"})
             next('/login');
         } else {
             next()
