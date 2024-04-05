@@ -1,26 +1,26 @@
 <template>
 
     <a-menu
-        v-model:selectedKeys="state.selectedKeys2"
+        v-model:selectedKeys="state.selectedKeys"
         v-model:openKeys="state.openKeys"
         mode="inline"
         :inline-collapsed="state.collapsed"
         :style="{ height: '100%', borderRight: 0 }"
     >
-      <a-sub-menu key="sub1" :popupOffset="10">
+      <a-sub-menu key="/" :popupOffset="10">
         <template #title>
         <span>
           <user-outlined/>
                 subnav 1
         </span>
         </template>
-        <a-menu-item key="1">
+        <a-menu-item key="/welcome">
           <router-link to="/welcome">
             <CoffeeOutlined/>
             欢迎页
           </router-link>
         </a-menu-item>
-        <a-menu-item key="2">
+        <a-menu-item key="/passenger">
           <router-link to="/passenger" >
             <user-outlined/>
           <span style="margin-left: 10px">乘客人管理</span>
@@ -58,12 +58,13 @@
 </template>
 <script setup>
 import {LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons-vue';
-import {reactive} from 'vue';
+import {reactive, watch} from 'vue';
+import router from "@/router";
 
 const state = reactive({
 
   collapsed: false,
-  selectedKeys2: ['1'],
+  selectedKeys: [],
   openKeys: ['sub1'],
   preOpenKeys: ['sub1'],
 });
@@ -71,6 +72,10 @@ const state = reactive({
 //   state.collapsed = !state.collapsed;
 //   state.openKeys = state.collapsed ? [] : state.preOpenKeys;
 // };
+watch(() => router.currentRoute.value.path, (newValue) => {
+  state.selectedKeys = []
+  state.selectedKeys.push(newValue)
+}, {immediate: true})
 </script>
 <style>
 .ant-menu-title-content{
