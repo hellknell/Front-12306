@@ -23,7 +23,7 @@
         <a-menu-item key="/passenger">
           <router-link to="/passenger" >
             <user-outlined/>
-          <span style="margin-left: 10px">乘客人管理</span>
+          乘客人管理
           </router-link>
         </a-menu-item>
         <a-menu-item key="3">option3</a-menu-item>

@@ -22,7 +22,7 @@
     </div>
     <div style="flex: 2;color: white;font-weight: 400;font-size: 17px;display: flex">
       <div style="flex: 2">
-        <span style="white-space: nowrap;text-overflow: ellipsis">你好! {{ member.mobile }}</span>
+        <span style="white-space: nowrap;text-overflow: ellipsis">你好! {{ member.mobile}} </span>
       </div>
       <div style="flex: 2">
         <router-link to="/login" @click="logout">退出系统</router-link>
@@ -35,7 +35,7 @@
 <script setup>
 import store from "@/store";
 import {message} from "ant-design-vue";
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import router from "@/router";
 
 const selectedKeys = ref([])
@@ -43,12 +43,15 @@ const logout = () => {
   store.commit("setMember", {})
   message.success("退出成功")
 }
+const member = ref({})
 watch(() => router.currentRoute.value.path, (newValue) => {
   selectedKeys.value=[]
   selectedKeys.value.push(newValue)
 }, {immediate: true})
+onMounted(()=>{
+   member.value = JSON.parse(localStorage?.getItem("member"))
+})
 
-const member = JSON.parse(localStorage.getItem("member"))
 </script>
 
 <style scoped>

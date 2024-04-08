@@ -29,7 +29,7 @@
         <a-layout-content
             :style="{ background: '#fff', padding: '10px', margin: 0, minHeight: '300px' }"
         >
-          会员人数:{{ count }}
+
           <router-view/>
         </a-layout-content>
       </a-layout>
@@ -39,25 +39,11 @@
 <script setup>
 import TheHeader from '@/component/the-header.vue'
 import TheSider from '@/component/the-sider.vue'
-import {onMounted, ref, watch} from "vue";
-import request from "@/util/request";
-import {message} from "ant-design-vue";
+import {ref} from "vue";
 import {MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons-vue";
-import router from "@/router";
 
-const count = ref('')
 const collapsed = ref(false)
-onMounted(() => {
-  request.get("/count").then(res => {
-    if (res.code === '200') {
-      count.value = res?.data
-    } else {
-      message.error("请求数据失败")
-    }
-  })
 
-})
-;
 // const toggleCollapsed = () => {
 //   state.collapsed =!state.collapsed
 //   state.openKeys = state.collapsed ? [] : state.preOpenKeys

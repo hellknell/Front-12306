@@ -14,8 +14,8 @@ const request = axios.create({
 // 比如统一加token，对请求参数统一加密
 request.interceptors.request.use(config => {
     config.headers['Content-Type'] = 'application/json;charset=utf-8';
-    let token = JSON.parse(localStorage.getItem('member'));
-    config.headers.token = token.token;
+    let member = JSON.parse(localStorage.getItem('member')) || ''
+    config.headers.token = member.token || '';
     return config
 }, error => {
     console.error('request error: ' + error) // for debug
@@ -27,17 +27,10 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(
     response => {
         let res = response.data;
-
-        // 兼容服务端返回的字符串数据
         if (typeof res === 'string') {
             res = res ? JSON.parse(res) : res
         }
-        return res;
-    },
-    error => {
-        const response = error.response;
-        const data = response.status;
-        if (data === 401) {
+        if (res.code === "401") {
             store.commit("setMember", {});
             notification.error({
                 message: '错误',
@@ -45,6 +38,10 @@ request.interceptors.response.use(
             })
             router.push('/login')
         }
+        return res;
+    },
+    error => {
+        console.error('response error: ' + error) // for debug
         return Promise.reject(error)
     }
 )
