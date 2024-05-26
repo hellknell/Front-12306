@@ -25,6 +25,11 @@ const routes = [
                 path: 'passenger',
                 name: 'Passenger',
                 component: () => import('../views/main/PassengerView.vue')
+            },
+            {
+                path: 'ticket',
+                name: 'Ticket',
+                component: () => import('../views/main/TicketView.vue')
             }]
     }]
 const router = createRouter({

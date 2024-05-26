@@ -18,6 +18,11 @@
             <span style="margin-left: 10px">乘客人管理</span>
           </router-link>
         </a-menu-item>
+        <a-menu-item key="/ticket">
+          <router-link to="/ticket">
+            <span style="margin-left: 10px">余票查询</span>
+          </router-link>
+        </a-menu-item>
       </a-menu>
     </div>
     <div style="flex: 2;color: white;font-weight: 400;font-size: 17px;display: flex">
@@ -44,7 +49,7 @@ const logout = () => {
   message.success("退出成功")
 }
 watch(() => router.currentRoute.value.path, (newValue) => {
-  selectedKeys.value=[]
+  selectedKeys.value = []
   selectedKeys.value.push(newValue)
 }, {immediate: true})
 
